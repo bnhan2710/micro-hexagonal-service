@@ -4,21 +4,29 @@ enum CategoryStatus {
     Inactive = 'inactive',
     Deleted = 'deleted',
 }
-export const CreateCategorySchema = z.object({
-    name: z.string().min(3, 'name must be at least 3 characters'),
+export const CategoryCreateSchema = z.object({
+    name: z.string().min(2, 'name must be at least 3 characters'),
     image: z.string().optional(),
     description: z.string().optional(),
     parentId: z.string().uuid().optional(),
 });
 
-export type CreateCategoryDTO = z.infer<typeof CreateCategorySchema>;
+export type CategoryCreateDTO = z.infer<typeof CategoryCreateSchema>;
 
-export const UpdateCategorySchema = z.object({
-    name: z.string().min(3, 'name must be at least 3 characters').optional(),
+export const CategoryUpdateSchema = z.object({
+    name: z.string().min(2, 'name must be at least 3 characters').optional(),
     image: z.string().optional(),
     description: z.string().optional(),
     parentId: z.string().uuid().optional(),
     status: z.nativeEnum(CategoryStatus).optional(),
 });
 
-export type UpdateCategoryDTO = z.infer<typeof UpdateCategorySchema>;
+export type CategoryUpdateDTO = z.infer<typeof CategoryUpdateSchema>
+
+export const CategoryCondDTOSchema  = z.object({
+    name: z.string().min(2, 'name must be at least 3 characters').optional(),
+    parentId: z.string().uuid().optional(),
+    status: z.nativeEnum(CategoryStatus).optional(),
+});
+
+export type CategoryCondDTO = z.infer<typeof CategoryCondDTOSchema>;

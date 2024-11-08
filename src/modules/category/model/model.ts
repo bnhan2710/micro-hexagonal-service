@@ -1,10 +1,5 @@
 import { z } from 'zod';
-
-export enum CategoryStatus {
-    Active = 'active',
-    Inactive = 'inactive',
-    Deleted = 'deleted',
-}
+import { ModelStatus } from '../../../share/model/base-model';
 
 //Business model
 export const CategorySchema = z.object({
@@ -14,7 +9,7 @@ export const CategorySchema = z.object({
     description: z.string().nullable().optional(),
     position: z.number().min(0,'invalid position').optional().default(0),
     parentId: z.string().uuid().nullable().optional(),
-    status: z.nativeEnum(CategoryStatus),
+    status: z.nativeEnum(ModelStatus),
     createdAt: z.date(),
     updatedAt: z.date(),
 });

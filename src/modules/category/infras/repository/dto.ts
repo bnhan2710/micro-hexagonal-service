@@ -1,9 +1,8 @@
 import {  DataTypes, Model , Sequelize } from "sequelize";
-import { CategoryStatus } from "../../model/model";
-
+import { ModelStatus } from "../../../../share/model/base-model";   
 export class CategoryPersistence extends Model {
     declare id: string;
-    declare status: CategoryStatus;
+    declare status: ModelStatus;
 }
 
 export const modelName = "Category";
@@ -29,10 +28,15 @@ export function init(sequelize: Sequelize) {
             field: 'parent_id',
             primaryKey: false
         },
+
+        description :{
+            type: DataTypes.STRING,
+            primaryKey: false
+        },
         status: {
             type: DataTypes.ENUM('active', 'inactive', 'deleted'),
             allowNull: false,
-            defaultValue: 'active'
+            defaultValue: ModelStatus.ACTIVE
         }
     }, {
         sequelize,
