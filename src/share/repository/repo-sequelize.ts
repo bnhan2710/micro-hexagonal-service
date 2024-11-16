@@ -1,34 +1,31 @@
-import { PagingDTO } from "../../../../share/model/paging";
-import { IRepository } from "../../interface";
-import { CategoryUpdateDTO, CategoryCondDTO } from "../../model/dto";
-import { Category, CategorySchema } from "../../model/model";
-import { sequelize } from '../../../../share/component/sequelize';
+import { PagingDTO } from "../model/paging";
+import { IRepository } from "../interface";
 import { Sequelize } from "sequelize";
-import { ModelStatus } from "../../../../share/model/base-model";
+import { ModelStatus } from "../model/base-model";
 import { Op } from "sequelize";
 
 //implement ORM here(Sequelize)
 
-export class MySQLCategoryRepository implements IRepository {
+export class BaseRepositorySequelize<Entity,Cond,UpdateDTO> implements IRepository<Entity,Cond,UpdateDTO> {
    constructor(private readonly sequelize: Sequelize, private readonly modelName: string){ }
 
-    async insert(data: Category): Promise<Boolean> {
-        await this.sequelize.models[this.modelName].create(data)
+    async insert(data: Entity): Promise<boolean> {
+        await this.sequelize.models[this.modelName].create(data as any)
         return true;
     }
 
-    async get(id: string): Promise<Category | null> {
+    async get(id: string): Promise<Entity | null> {
         const data = await this.sequelize.models[this.modelName].findByPk(id)
         if(!data){
             return null
         }
         const persistanceData = data.get({plain:true})
         // {createdAt:persistanceData.createdAt,updatedAt:persistanceData.updatedAt, children:[]} } = 
-        return {...persistanceData,children:[],
-            createdAt:persistanceData.created_at,updatedAt:persistanceData.updated_at} as Category
+        return {...persistanceData,
+            createdAt:persistanceData.created_at,updatedAt:persistanceData.updated_at} as Entity
     }
 
-    async list(cond: CategoryCondDTO, paging: PagingDTO): Promise<Category[]> {
+    async list(cond: Cond, paging: PagingDTO): Promise<Entity[]> {
         const {limit ,page} = paging
 
         const condSQL = {...cond,status: {[Op.ne]: ModelStatus.DELETED}}
@@ -38,8 +35,8 @@ export class MySQLCategoryRepository implements IRepository {
         return rows.map((row) => row.get({plain:true}))
     }
 
-    async update(id: string, data: CategoryUpdateDTO): Promise<boolean> {
-        await this.sequelize.models[this.modelName].update(data, { where: { id } })
+    async update(id: string, data: UpdateDTO ): Promise<boolean> {
+        await this.sequelize.models[this.modelName].update(data as any, { where: { id } })
         return true;
     }
 

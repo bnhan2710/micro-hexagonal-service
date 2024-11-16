@@ -1,14 +1,12 @@
 import {  DataTypes, Model , Sequelize } from "sequelize";
-import { ModelStatus } from "../../../../share/model/base-model";   
-export class CategoryPersistence extends Model {
-    declare id: string;
-    declare status: ModelStatus;
+import { ModelStatus } from "../../../../../share/model/base-model";   
+export class BrandPersistence extends Model {
 }
 
-export const modelName = "Category";
+export const modelName = "Brand";
 
 export function init(sequelize: Sequelize) {
-    CategoryPersistence.init({
+    BrandPersistence.init({
         id: {
             type: DataTypes.STRING,
             primaryKey: true
@@ -23,15 +21,16 @@ export function init(sequelize: Sequelize) {
             allowNull: true
         },
 
-        parentId :{
+        tagLine :{
             type: DataTypes.STRING,
-            field: 'parent_id',
+            field: 'tag_line',
+            primaryKey: false,
             allowNull: true
         },
 
         description :{
             type: DataTypes.STRING,
-            primaryKey: true
+            allowNull: true,
         },
         status: {
             type: DataTypes.ENUM('active', 'inactive', 'deleted'),
@@ -44,6 +43,6 @@ export function init(sequelize: Sequelize) {
         timestamps: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
-        tableName: 'categories'
+        tableName: 'brands'
     });
 }
