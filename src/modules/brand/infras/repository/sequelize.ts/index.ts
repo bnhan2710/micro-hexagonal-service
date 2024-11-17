@@ -7,4 +7,5 @@ export class MySQLBrandRepository extends BaseRepositorySequelize<Brand,BrandCon
     constructor(sequelize:any){
         super( sequelize,modelName );
     } 
+    
 }

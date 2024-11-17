@@ -1,15 +1,22 @@
 import { Request, Response } from "express";
 import { Brand } from "../../model/brand";
-import { BrandCreateSchema, BrandUpdateSchema } from '../../model/dto';
-import { BrandUseCase } from "../../usecase";
 import { PagingDTOSchema } from "../../../../share/model/paging";
+import { CreateCommand, DeleteCommand, GetDetailQuery, ListQuery, UpdateCommand} from "../../interface";
+import { ICommandHandler, IQueryHandler } from "../../../../share/interface";
 
 export class BrandHttpService {
-    constructor(private readonly useCase: BrandUseCase ) {}
+    constructor(
+        private readonly createCmdHanlder: ICommandHandler<CreateCommand,string>, 
+        private readonly getDetailQueryHandler: IQueryHandler<GetDetailQuery,Brand>,
+        private readonly ListQueryHandler: IQueryHandler<ListQuery,Brand[]>,
+        private readonly updateCmdHandler : ICommandHandler<UpdateCommand,void>,
+        private readonly deleteCmdHandler : ICommandHandler<DeleteCommand,void>,
+    ) {}
 
     async createAPI(req:Request,res: Response){
         try{
-            const result = await this.useCase.create(req.body)
+            const cmd:CreateCommand = {cmd:req.body}
+            const result = await this.createCmdHanlder.execute(cmd)
             res.status(201).json({data: result})
         }catch(e){
            res.status(400).json({
@@ -19,13 +26,19 @@ export class BrandHttpService {
     } 
 
     async getDetailAPI(req:Request, res:Response){ 
-        const { id } = req.params
-        const result = await this.useCase.getDetail(id)
-        res.status(200).json({data:result});
+        try{
+            const {id} = req.params
+            const result = await this.getDetailQueryHandler.query({id})
+            res.status(200).json({data: result})
+        }catch(e){
+            res.status(400).json({
+                message: (e as Error).message
+            })
+        }
     }
 
     async listAPI(req:Request, res:Response){
-        //fix cứng
+        try{
         const { success, data:paging, error } = PagingDTOSchema.safeParse(req.query);
         if (!success) {
             res.status(400).json({
@@ -34,28 +47,39 @@ export class BrandHttpService {
             return;
         }    
 
-        const result = await this.useCase.list({}, paging);   
+        const result = await this.ListQueryHandler.query({paging,cond:{}});   
         res.status(200).json({data: result,paging,filter:{}})
+    }catch(e){
+        res.status(400).json({
+            message: (e as Error).message
+        })
+    }
     }
 
     async updateAPI(req:Request, res:Response){
-        const {id} = req.params
-        const {success, data, error} = BrandUpdateSchema.safeParse(req.body)
-        if(!success){
+        try{
+            const {id} = req.params
+            const cmd:UpdateCommand = {id, dto:req.body}
+            const result = await this.updateCmdHandler.execute(cmd)
+            res.status(200).json({data: result})
+        }catch(e){
             res.status(400).json({
-                message: error.message
+                message: (e as Error).message
             })
-            return;
         }
-       const result = await this.useCase.update(id, data)
-        res.status(200).json({data: result})
     }
 
     async deleteAPI( req:Request, res:Response ){
-        const { id } = req.params
-       const result = await this.useCase.delete(id)
-        res.status(200).json({data: result})
+        try{
+            const {id} = req.params
+            const cmd:DeleteCommand = {id,isHard:false}
+            const result = await this.deleteCmdHandler.execute(cmd)
+            res.status(200).json({data: result})
+        }catch(e){
+            res.status(400).json({
+                message: (e as Error).message
+            })
     }
-
+    }
 
 }

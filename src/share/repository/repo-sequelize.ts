@@ -25,6 +25,15 @@ export class BaseRepositorySequelize<Entity,Cond,UpdateDTO> implements IReposito
             createdAt:persistanceData.created_at,updatedAt:persistanceData.updated_at} as Entity
     }
 
+    async findByCond(cond: Cond): Promise<Entity | null> {
+        const data = await this.sequelize.models[this.modelName].findOne({where: cond as any})
+        if(!data){
+            return null
+        }
+        const persistanceData = data.get({plain:true})
+        return persistanceData as Entity
+    }
+
     async list(cond: Cond, paging: PagingDTO): Promise<Entity[]> {
         const {limit ,page} = paging
 
