@@ -1,11 +1,13 @@
+import 'module-alias/register'
+
 import express from 'express';
-import { Request, Response, Application } from 'express';
 const app = express();
 import dotenv from 'dotenv';
-import { setupCategoryHexagon } from './modules/category';
-import {sequelize} from './share/component/sequelize';
-import { setupBrandHexagon } from './modules/brand';
+import { setupCategoryHexagon } from '@modules/category';
+import { setupBrandHexagon } from '@modules/brand';
+import {sequelize} from '@share/component/sequelize';
 const port = process.env.PORT || 3000;
+import { Request, Response, Application } from 'express';
 dotenv.config();
 
 app.use(express.json());

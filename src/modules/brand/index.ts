@@ -25,7 +25,7 @@ export const setupBrandHexagon = (sequelize:Sequelize ) => {
         getDetailQueryHandler,
         listQueryHandler,
         updateCmdHandler,
-        deleteCmdHandler)
+         deleteCmdHandler)
 
     const router = Router();
     
