@@ -4,14 +4,17 @@ import { init, modelName } from './infras/repository/mysql/dto';
 import { MySQLProductRepository } from './infras/repository/mysql/mysql-repo';
 import { ProductUsecase } from './usecase';
 import { ProductHttpService } from './infras/transport/http-service';
+import { RPCProductBrandRepository } from './infras/repository/rpc';
+import { config } from '@share/component/config';
 
 
-export const setupproductHexagon = (sequelize:Sequelize ) => {
+export const setupProductHexagon = (sequelize:Sequelize ) => {
     init(sequelize)
 
     const repository = new MySQLProductRepository(sequelize,modelName)
     const useCase = new ProductUsecase(repository)
-    const httpService = new ProductHttpService(useCase)
+    const productBrandRepository = new RPCProductBrandRepository(config.rpc.productBrand)
+    const httpService = new ProductHttpService(useCase, productBrandRepository)
     const router = Router();
     
     router.post('/products', httpService.createAPI.bind(httpService));
@@ -20,7 +23,6 @@ export const setupproductHexagon = (sequelize:Sequelize ) => {
     router.patch('/products/:id', httpService.updateAPI.bind(httpService));
     router.delete('/products/:id', httpService.deleteAPI.bind(httpService));
     
-
     return router;
 }
 

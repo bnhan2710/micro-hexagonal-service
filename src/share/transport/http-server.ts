@@ -3,7 +3,7 @@ import { IUsecase } from "../interface";
 import { PagingDTOSchema } from "../model/paging";
 
 export abstract class BaseHttpService<Entity, CreateDTO,UpdateDTO, Cond> {
-    constructor(private readonly useCase: IUsecase<CreateDTO, UpdateDTO, Entity, Cond>){ }
+    constructor(protected readonly useCase: IUsecase<CreateDTO, UpdateDTO, Entity, Cond>){ }
 
     async createAPI(req: Request<any,any,CreateDTO>, res: Response) {
         try {

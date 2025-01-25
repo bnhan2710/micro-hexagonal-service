@@ -32,4 +32,18 @@ export const ProductSchema = z.object({
     updatedAt: z.date(),
 })
 
-export type Product = z.infer<typeof ProductSchema>;
+export type Product = z.infer<typeof ProductSchema> & {category?: ProductCategory, brand?: ProductBrand};
+
+export const ProductBrandSchema = z.object({
+    id: z.string().uuid(),
+    name: z.string().min(2, ErrProductNameTooShort)
+})
+
+export type ProductBrand = z.infer<typeof ProductBrandSchema>;  
+
+export const ProductCategorySchema = z.object({
+    id: z.string().uuid(),
+    name: z.string().min(2, ErrProductNameTooShort)
+})
+
+export type ProductCategory = z.infer<typeof ProductCategorySchema>;

@@ -1,13 +1,15 @@
 import 'module-alias/register'
 
-import express from 'express';
+import express, { application } from 'express';
 const app = express();
 import dotenv from 'dotenv';
 import { setupCategoryHexagon } from '@modules/category';
 import { setupBrandHexagon } from '@modules/brand';
-import {sequelize} from '@share/component/sequelize';
+import { setupProductHexagon } from '@modules/product';
+import {sequelize} from '@share/component/sequelize'
 const port = process.env.PORT || 3000;
 import { Request, Response, Application } from 'express';
+
 dotenv.config();
 
 app.use(express.json());
@@ -18,6 +20,7 @@ app.use(express.json());
     console.log('Connection has been established successfully.');
     app.use('/v1',setupCategoryHexagon(sequelize));
     app.use('/v1',setupBrandHexagon(sequelize));
+    app.use('/v1',setupProductHexagon(sequelize));
     app.get('/', (req: Request, res: Response) => {
         res.send('Hello World!');
     });    

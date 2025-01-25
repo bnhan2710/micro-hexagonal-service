@@ -1,6 +1,6 @@
-import { ProductCondDTO, ProductUpdateDTO } from "@/modules/product/model/dto";
-import { Product } from "@/modules/product/model/product";
-import { BaseCommandRepositorySequelize, BaseQueryRepositorySequelize, BaseRepositorySequelize } from "@/share/repository/repo-sequelize";
+import { ProductCondDTO, ProductUpdateDTO } from "@modules/product/model/dto";
+import { Product } from "@modules/product/model/product";
+import { BaseCommandRepositorySequelize, BaseQueryRepositorySequelize, BaseRepositorySequelize } from "@share/repository/repo-sequelize";
 import { Sequelize } from "sequelize";
 
 export class MySQLProductRepository extends BaseRepositorySequelize<Product, ProductCondDTO, ProductUpdateDTO> {
@@ -16,6 +16,7 @@ class MYSQLProductQueryRepository extends BaseQueryRepositorySequelize<Product, 
     constructor(sequelize: Sequelize, modelName: string) {
         super(sequelize, modelName);
     }
+
 }
 
 class MYSQLProductCommandRepository extends BaseCommandRepositorySequelize<Product, ProductUpdateDTO> {

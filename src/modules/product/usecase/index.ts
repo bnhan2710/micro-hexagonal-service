@@ -1,10 +1,10 @@
-import { ModelStatus } from "@/share/model/base-model";
-import { PagingDTO } from "@/share/model/paging";
+import { ModelStatus } from "@share/model/base-model";
+import { PagingDTO } from "@share/model/paging";
 import { v7 } from "uuid";
 import { ProductCondDTO, ProductCondSchema , ProductCreateDTO, ProductCreateSchema, ProductUpdateDTO, ProductUpdateSchema } from "../model/dto";
 import { Product, ProductGender } from "../model/product";
 import { IProductUsecase } from "../interface";
-import { IRepository } from "@/share/interface";
+import { IRepository } from "@share/interface";
 import { ErrProductNotFound } from "../model/errors";
 
 export class ProductUsecase implements IProductUsecase {
