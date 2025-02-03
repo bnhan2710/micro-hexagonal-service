@@ -3,15 +3,32 @@ import { PagingDTO } from "@share/model/paging";
 import { v7 } from "uuid";
 import { ProductCondDTO, ProductCondSchema , ProductCreateDTO, ProductCreateSchema, ProductUpdateDTO, ProductUpdateSchema } from "../model/dto";
 import { Product, ProductGender } from "../model/product";
-import { IProductUsecase } from "../interface";
+import { IBrandQueryRepository, ICategoryQueryRepository, IProductUsecase } from "../interface";
 import { IRepository } from "@share/interface";
-import { ErrProductNotFound } from "../model/errors";
+import { ErrBrandNotFound, ErrCategoryNotFound, ErrProductNotFound } from "../model/errors";
 
 export class ProductUsecase implements IProductUsecase {
-    constructor(private readonly repository: IRepository<Product,ProductCondDTO, ProductUpdateDTO> ) {}
+    constructor(
+        private readonly repository: IRepository<Product,ProductCondDTO, ProductUpdateDTO>,
+        private readonly productBrandRepository: IBrandQueryRepository,
+        private readonly productCategoryRepository: ICategoryQueryRepository,
+    ) {}
 
     async create(data: ProductCreateDTO): Promise<string> {
         const dto = ProductCreateSchema.parse(data);
+        if(dto.brandId){
+            const brand = await this.productBrandRepository.get(dto.brandId);
+            if(!brand){
+                throw ErrBrandNotFound;
+            }
+        }
+
+        if(dto.categoryId){
+            const category = await this.productCategoryRepository.get(dto.categoryId);
+            if(!category){
+                throw ErrCategoryNotFound;
+            }
+        }
 
         const newId = v7();
         const newProduct = {
@@ -23,7 +40,8 @@ export class ProductUsecase implements IProductUsecase {
             gender: ProductGender.UNISEX,
             createdAt: new Date(),
             updatedAt: new Date(),
-        }
+        };
+
         await this.repository.insert(newProduct);
         return newId;
 

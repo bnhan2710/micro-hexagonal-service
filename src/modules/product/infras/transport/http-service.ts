@@ -1,14 +1,17 @@
-import { IBrandQueryRepository, IProductUsecase } from "@modules/product/interface";
+import { IBrandQueryRepository, ICategoryQueryRepository, IProductUsecase } from "@modules/product/interface";
 import { ProductCreateDTO, ProductUpdateDTO, ProductCondDTO } from '@modules/product/model/dto';
 import { Product } from "@modules/product/model/product";
 import { BaseHttpService } from "@share/transport/http-server";
 import { Request, Response } from "express";
-import { RPCProductBrandRepository } from "../repository/rpc";
-import { config } from "@share/component/config";
 
 export class ProductHttpService extends BaseHttpService<Product, ProductCreateDTO, ProductUpdateDTO, ProductCondDTO>  {
-    constructor(useCase: IProductUsecase, private readonly productBrandRepository: IBrandQueryRepository) {
-        super(useCase);
+    constructor(
+        useCase: IProductUsecase, 
+        private readonly productBrandRepository: IBrandQueryRepository,
+        private readonly productCategoryRepository: ICategoryQueryRepository,
+    )
+        {
+    super(useCase);
     }
     async getDetailAPI(req: Request, res: Response) {
         try {
@@ -24,7 +27,13 @@ export class ProductHttpService extends BaseHttpService<Product, ProductCreateDT
            if(brand){
                 result!.brand = brand
            }
-           
+
+            const category = await this.productCategoryRepository.get(result!.categoryId!)
+
+            if(category){
+                result!.category = category
+            }
+
             res.status(200).json({data:result})
         } catch (error) {
             res.status(400).json({

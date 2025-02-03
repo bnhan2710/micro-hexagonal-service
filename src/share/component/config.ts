@@ -4,6 +4,7 @@ dotenv.config();
 export const config = {
     rpc: {
         productBrand : process.env.RPC_PRODUCT_BRAND_URL || 'http://localhost:3000',
+        productCategory : process.env.RPC_PRODUCT_CATEGORY_URL || 'http://localhost:3000'
     },
     mysql:  
         {
@@ -19,6 +20,6 @@ export const config = {
                 acquire: 30000,
                 idle: 60000,
             },
-            logging: false
+            logging: true
         }
 }

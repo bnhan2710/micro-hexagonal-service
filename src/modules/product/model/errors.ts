@@ -7,3 +7,5 @@ export const ErrCategoryIdMustBeValid = new Error('Category id must be valid');
 
 export const ErrFromPriceMustBePositive = new Error('From price must be positive');
 export const ErrToPriceMustBePositive = new Error('To price must be positive');
+export const ErrBrandNotFound = new Error('Brand not found');
+export const ErrCategoryNotFound = new Error('Category not found');
