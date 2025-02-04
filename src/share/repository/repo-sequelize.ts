@@ -3,11 +3,8 @@ import { ICommandRepository, IQueryRepository, IRepository } from "../interface"
 import { Sequelize } from "sequelize";
 import { ModelStatus } from "../model/base-model";
 import { Op } from "sequelize";
-import { sequelize } from '../component/sequelize';
-import { modelName } from '../../modules/category/infras/repository/dto';
 
 //implement ORM here(Sequelize)
-
 export abstract class BaseRepositorySequelize<Entity,Cond,UpdateDTO> implements IRepository<Entity,Cond,UpdateDTO> {
    constructor(
     readonly queryRepo: IQueryRepository<Entity, Cond>,

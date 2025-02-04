@@ -16,9 +16,8 @@ export class ProductHttpService extends BaseHttpService<Product, ProductCreateDT
     async getDetailAPI(req: Request, res: Response) {
         try {
         
-            
             const result = await this.useCase.getDetail(req.params.id);
-        
+            
             if(!result){
                 res.status(404).json({message:"Not found"})
             }

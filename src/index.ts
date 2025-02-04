@@ -7,7 +7,7 @@ import { setupCategoryHexagon } from '@modules/category';
 import { setupBrandHexagon } from '@modules/brand';
 import { setupProductHexagon } from '@modules/product';
 import {sequelize} from '@share/component/sequelize'
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 import { Request, Response, Application } from 'express';
 
 dotenv.config();
@@ -25,7 +25,7 @@ app.use(express.json());
         res.send('Hello World!');
     });     
     app.listen(port, () => {
-        console.log('Server is running on http://localhost:3000');
+        console.log('Server is running on http://localhost:8000');
     });    
 })();    
 

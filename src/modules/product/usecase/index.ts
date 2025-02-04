@@ -15,13 +15,15 @@ export class ProductUsecase implements IProductUsecase {
     ) {}
 
     async create(data: ProductCreateDTO): Promise<string> {
-        const dto = ProductCreateSchema.parse(data);
+        const dto = ProductCreateSchema.parse(data);   
+        
         if(dto.brandId){
             const brand = await this.productBrandRepository.get(dto.brandId);
             if(!brand){
                 throw ErrBrandNotFound;
             }
         }
+
 
         if(dto.categoryId){
             const category = await this.productCategoryRepository.get(dto.categoryId);

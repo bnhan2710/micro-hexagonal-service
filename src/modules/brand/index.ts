@@ -25,7 +25,7 @@ export const setupBrandHexagon = (sequelize:Sequelize ) => {
         getDetailQueryHandler,
         listQueryHandler,
         updateCmdHandler,
-         deleteCmdHandler)
+        deleteCmdHandler)
 
     const router = Router();
     
@@ -35,6 +35,7 @@ export const setupBrandHexagon = (sequelize:Sequelize ) => {
     router.patch('/brands/:id', httpService.updateAPI.bind(httpService));
     router.delete('/brands/:id', httpService.deleteAPI.bind(httpService));
 
+    
     return router;
 }
 

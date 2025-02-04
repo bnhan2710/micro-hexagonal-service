@@ -18,6 +18,7 @@ export const ProductCreateSchema = z.object({
     categoryId: z.string().uuid(ErrCategoryIdMustBeValid),
     content: z.string().optional(),
     description: z.string().optional(),
+    
 })
 
 export type ProductCreateDTO = z.infer<typeof ProductCreateSchema>;

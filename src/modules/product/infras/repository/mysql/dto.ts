@@ -21,7 +21,7 @@ export function init(sequelize: Sequelize) {
         },
         images: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         price: {
             type: DataTypes.DECIMAL(10, 2),
@@ -49,11 +49,11 @@ export function init(sequelize: Sequelize) {
         },
         description: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         content: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         gender: {
             type: DataTypes.STRING,
@@ -61,7 +61,7 @@ export function init(sequelize: Sequelize) {
         },
         colors: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         status: {
             type: DataTypes.STRING,

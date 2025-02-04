@@ -16,7 +16,6 @@ class MYSQLProductQueryRepository extends BaseQueryRepositorySequelize<Product, 
     constructor(sequelize: Sequelize, modelName: string) {
         super(sequelize, modelName);
     }
-
 }
 
 class MYSQLProductCommandRepository extends BaseCommandRepositorySequelize<Product, ProductUpdateDTO> {

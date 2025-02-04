@@ -4,7 +4,7 @@ import { init, modelName } from './infras/repository/mysql/dto';
 import { MySQLProductRepository } from './infras/repository/mysql/mysql-repo';
 import { ProductUsecase } from './usecase';
 import { ProductHttpService } from './infras/transport/http-service';
-import { ProxyProductBrandRepository, RPCProductBrandRepository } from './infras/repository/rpc';
+import { ProxyProductBrandRepository, RPCProductBrandRepository,RPCProductCategoryRepository } from './infras/repository/rpc';
 import { config } from '@share/component/config';
 
 
@@ -14,7 +14,7 @@ export const setupProductHexagon = (sequelize:Sequelize ) => {
     const repository = new MySQLProductRepository(sequelize,modelName)
     // const productBrandRepository = new RPCProductBrandRepository(config.rpc.productBrand)
     const productBrandRepository = new ProxyProductBrandRepository(new RPCProductBrandRepository(config.rpc.productBrand))
-    const productCategoryRepository = new RPCProductBrandRepository(config.rpc.productCategory)
+    const productCategoryRepository = new RPCProductCategoryRepository(config.rpc.productCategory)
 
     const useCase = new ProductUsecase(
          repository,

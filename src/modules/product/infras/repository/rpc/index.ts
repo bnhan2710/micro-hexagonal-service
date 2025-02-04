@@ -6,7 +6,6 @@ export class RPCProductBrandRepository implements IBrandQueryRepository {
     constructor( private readonly baseUrl : string) { }
     async get(id: string): Promise<ProductBrand | null> {
       try{
-
           const { data } = await axios.get(`${this.baseUrl}/v1/brands/${id}`);
       
           const brand = ProductBrandSchema.parse(data.data)
@@ -24,7 +23,7 @@ export class RPCProductCategoryRepository implements ICategoryQueryRepository {
     constructor( private readonly baseUrl : string) { }
     async get(id: string): Promise<ProductBrand | null> {
         try{
-  
+            
             const { data } = await axios.get(`${this.baseUrl}/v1/categories/${id}`);
         
             const category = ProductCategorySchema.parse(data.data)

@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
-import { CategoryUseCase } from "../../usecase";
 import { CategoryCondDTOSchema, CategoryCreateSchema, CategoryUpdateSchema } from "../../model/dto";
 import { ICategoryUseCase } from "../../interface";
-import { stat } from "fs";
-import { PagingDTO, PagingDTOSchema } from '../../../../share/model/paging';
 import { Category } from '../../model/model';
 
 export class CategoryHttpService {
