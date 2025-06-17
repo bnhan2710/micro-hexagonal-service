@@ -7,19 +7,20 @@ import { modelName } from "./dto";
 export class MySQLBrandRepository extends BaseRepositorySequelize<Brand,BrandCondDTO,BrandUpdateDTO> {
     constructor(sequelize:Sequelize){
         super(
-            new BrandQueryRepositorySequelize(sequelize),
-            new BrandCommandRepositorySequelize(sequelize)
+            new MySQLQueryRepositorySequelize(sequelize),
+            new MySQLCommandRepositorySequelize(sequelize)
         )
     }
 }
     
-export class BrandQueryRepositorySequelize extends BaseQueryRepositorySequelize<Brand,BrandCondDTO> {
+export class MySQLQueryRepositorySequelize extends BaseQueryRepositorySequelize<Brand,BrandCondDTO> {
     constructor(sequelize:Sequelize){
         super(sequelize,modelName)
     }
+
 }
 
-export class BrandCommandRepositorySequelize extends BaseCommandRepositorySequelize<Brand,BrandUpdateDTO> {
+export class MySQLCommandRepositorySequelize extends BaseCommandRepositorySequelize<Brand,BrandUpdateDTO> {
     constructor(sequelize:Sequelize){
         super(sequelize,modelName)
     }

@@ -5,7 +5,7 @@ import { PagingDTOSchema } from "../model/paging";
 export abstract class BaseHttpService<Entity, CreateDTO,UpdateDTO, Cond> {
     constructor(protected readonly useCase: IUsecase<CreateDTO, UpdateDTO, Entity, Cond>){ }
 
-    async createAPI(req: Request<any,any,CreateDTO>, res: Response) {
+    async createAPI(req: Request, res: Response) {
         try {
             const result = await this.useCase.create(req.body)
             res.status(201).json({data:result})

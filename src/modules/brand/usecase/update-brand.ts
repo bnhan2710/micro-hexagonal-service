@@ -2,7 +2,6 @@ import { v7 } from "uuid";
 import { ModelStatus } from "../../../share/model/base-model";
 import { CreateCommand, IBrandRepository, UpdateCommand} from "../interface";
 import { BrandCreateSchema, BrandUpdateSchema } from "../model/dto";
-import { ErrDupliateBrandName } from "../model/errors";
 import { ICommandHandler } from "../../../share/interface";
 import { ErrDataNotFound } from "../../../share/model/base-error";
 
@@ -19,6 +18,7 @@ export class UpdateBrandHandler implements ICommandHandler<UpdateCommand,void>{
         if(!isExist || isExist.status === ModelStatus.DELETED){
             throw  ErrDataNotFound;
         }
+        
         this.repository.update(command.id,parsedData);
         return
     }

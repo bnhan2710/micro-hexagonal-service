@@ -32,3 +32,34 @@ export interface IUsecase<CreateDTO, UpdateDTO, Entity, Cond>{
   update(id:string, data:UpdateDTO):Promise<boolean>
   delete(id:string):Promise<boolean>
 }
+
+export interface TokenPayload {
+  sub: string;
+  role: UserRole;
+}
+
+
+export enum UserRole {
+  ADMIN = "admin",
+  USER = "user",
+}
+
+export type UserToken = {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface Requester extends TokenPayload {}
+
+export interface ITokenProvider {
+  generateToken(payload: TokenPayload): Promise<string>;
+  verifyToken(token: string): Promise<TokenPayload | null>;
+}
+
+
+//Authorization result
+export type TokenIntrospectResult = {
+  payload: TokenPayload | null;
+  error?: Error;
+  isOk: boolean;
+}

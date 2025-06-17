@@ -16,6 +16,8 @@
     "@types/module-alias": "^2.0.4",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
+    "bcrypt-ts": "^7.1.0",
+    "brcypt": "^1.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",

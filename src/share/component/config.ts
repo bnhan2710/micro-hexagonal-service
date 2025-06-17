@@ -21,5 +21,13 @@ export const config = {
                 idle: 60000,
             },
             logging: true
-        }
+        },
+    accessToken: {
+        secretKey: process.env.ACCESS_TOKEN_SECRET_KEY || 'default_access_token_secret_key',
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN || '7d'
+    },
+    refreshToken: {
+        secretKey: process.env.REFRESH_TOKEN_SECRET_KEY || 'default_refresh_token_secret_key',
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '30d'
+    },
 }

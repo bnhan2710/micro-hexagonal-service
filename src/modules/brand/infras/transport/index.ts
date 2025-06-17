@@ -82,4 +82,9 @@ export class BrandHttpService {
     }
     }
 
+    async listByIds(req:Request, res:Response){
+        // call directly to repository
+        
+    }
+
 }

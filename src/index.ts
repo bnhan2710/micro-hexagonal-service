@@ -6,7 +6,9 @@ import dotenv from 'dotenv';
 import { setupCategoryHexagon } from '@modules/category';
 import { setupBrandHexagon } from '@modules/brand';
 import { setupProductHexagon } from '@modules/product';
+import { setupUserHexagon } from '@modules/user';
 import {sequelize} from '@share/component/sequelize'
+
 const port = process.env.PORT || 8000;
 import { Request, Response, Application } from 'express';
 
@@ -21,6 +23,7 @@ app.use(express.json());
     app.use('/v1',setupCategoryHexagon(sequelize));
     app.use('/v1',setupBrandHexagon(sequelize));
     app.use('/v1',setupProductHexagon(sequelize));
+    app.use('/v1' ,setupUserHexagon(sequelize));
     app.get('/', (req: Request, res: Response) => {
         res.send('Hello World!');
     });     
