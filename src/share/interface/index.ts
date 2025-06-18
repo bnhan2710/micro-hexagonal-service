@@ -63,3 +63,8 @@ export type TokenIntrospectResult = {
   error?: Error;
   isOk: boolean;
 }
+
+export interface ITokenIntrospect {
+  instropect(token: string): Promise<TokenIntrospectResult>;
+}
+

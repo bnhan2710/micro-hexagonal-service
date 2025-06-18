@@ -4,8 +4,10 @@ import { MySQLUserRepository } from "./infras/repository/mysql";
 import { init,modelName } from "./infras/repository/mysql/dto"
 import { UserHttpService } from "./infras/transport";
 import { UserUseCase } from "./usecase";
+import { ServiceContext } from "@share/interface/service-context";
+import { UserRole } from "@share/interface";
 
-export const setupUserHexagon = (sequelize: Sequelize) => {
+export const setupUserHexagon = (sequelize: Sequelize, sctx: ServiceContext) => {
     init(sequelize);
 
 
@@ -14,17 +16,22 @@ export const setupUserHexagon = (sequelize: Sequelize) => {
     const httpService = new UserHttpService(useCase);
 
     const router = Router();
+    const mdlFactory = sctx.mdlFactory;
+    const adminChecker = mdlFactory.allowRoles([UserRole.ADMIN]);
 
-    router.post('/register ', httpService.register.bind(httpService));
-    router.post('/authenticate', httpService.login.bind(httpService));
-    router.get('/profile', httpService.profile.bind(httpService));
+    router.post('/register ', httpService.registerAPI.bind(httpService));
+    router.post('/authenticate', httpService.loginAPI.bind(httpService));
+    router.get('/profile', httpService.profileAPI.bind(httpService));
 
 
-    router.post('/users', httpService.createAPI.bind(httpService));
+    router.post('/users', mdlFactory.auth, adminChecker, httpService.createAPI.bind(httpService));
     router.get('/users/:id', httpService.getDetailAPI.bind(httpService));
     router.get('/users', httpService.listAPI.bind(httpService));
-    router.put('/users/:id', httpService.updateAPI.bind(httpService));
-    router.delete('/users/:id', httpService.deleteAPI.bind(httpService));
+    router.put('/users/:id', mdlFactory.auth, adminChecker, httpService.updateAPI.bind(httpService));
+    router.delete('/users/:id', mdlFactory.auth, adminChecker, httpService.deleteAPI.bind(httpService));
+
+    // RPC endpoint for token introspect 
+    router.post('/rpc/introspect', httpService.introspectAPI.bind(httpService));
 
     return router;
 }

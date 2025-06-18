@@ -1,4 +1,5 @@
-import { Gender, Role, Status } from "@modules/user/model";
+import { Gender, Status } from "@modules/user/model";
+import { UserRole } from "@share/interface";
 import { DataTypes, Model, Sequelize } from "sequelize";
 
 export class UserPersistence extends Model {}
@@ -64,9 +65,9 @@ export function init(sequelize: Sequelize){
         },
         role: {
             type: DataTypes.ENUM,
-            values: Object.values(Role),
+            values: Object.values(UserRole),
             allowNull: false,
-            defaultValue: Role.USER
+            defaultValue: UserRole.USER
         },
 },
 {

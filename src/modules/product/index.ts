@@ -6,9 +6,11 @@ import { ProductUsecase } from './usecase';
 import { ProductHttpService } from './infras/transport/http-service';
 import { ProxyProductBrandRepository, RPCProductBrandRepository,RPCProductCategoryRepository } from './infras/repository/rpc';
 import { config } from '@share/component/config';
+import { ServiceContext } from '@share/interface/service-context';
+import { UserRole } from '@share/interface';
 
 
-export const setupProductHexagon = (sequelize:Sequelize ) => {
+export const setupProductHexagon = (sequelize:Sequelize, sctx: ServiceContext ) => {
     init(sequelize)
 
     const repository = new MySQLProductRepository(sequelize,modelName)
@@ -26,12 +28,15 @@ export const setupProductHexagon = (sequelize:Sequelize ) => {
     )
 
     const router = Router();
+    const mdlFactory = sctx.mdlFactory;
+    const adminChecker = mdlFactory.allowRoles([UserRole.ADMIN]);
+
     
-    router.post('/products', httpService.createAPI.bind(httpService));
+    router.post('/products', mdlFactory.auth, adminChecker, httpService.createAPI.bind(httpService));
     router.get('/products', httpService.listAPI.bind(httpService));
     router.get('/products/:id', httpService.getDetailAPI.bind(httpService));
-    router.patch('/products/:id', httpService.updateAPI.bind(httpService));
-    router.delete('/products/:id', httpService.deleteAPI.bind(httpService));
+    router.patch('/products/:id', mdlFactory.auth, adminChecker, httpService.updateAPI.bind(httpService));
+    router.delete('/products/:id', mdlFactory.auth, adminChecker, httpService.deleteAPI.bind(httpService));
     
     return router;
 }

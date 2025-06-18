@@ -8,9 +8,11 @@ import { GetBrandDetailQuery } from './usecase/get-brand-detail';
 import { UpdateBrandHandler } from './usecase/update-brand';
 import { DeleteBrandHandler } from './usecase/delete-brand';
 import { ListQueryHandler } from './usecase/list-brand';
+import { ServiceContext } from '@share/interface/service-context';
+import { UserRole } from '@share/interface/index';
 
 
-export const setupBrandHexagon = (sequelize:Sequelize ) => {
+export const setupBrandHexagon = (sequelize:Sequelize, sctx: ServiceContext) => {
     init(sequelize)
 
     const repository = new MySQLBrandRepository(sequelize)
@@ -28,18 +30,19 @@ export const setupBrandHexagon = (sequelize:Sequelize ) => {
         deleteCmdHandler)
 
     const router = Router();
+    const mdlFactory = sctx.mdlFactory;
+    const adminChecker = mdlFactory.allowRoles([UserRole.ADMIN]);
     
-    router.post('/brands', httpService.createAPI.bind(httpService));
+    router.post('/brands', mdlFactory.auth, adminChecker, httpService.createAPI.bind(httpService));
     router.get('/brands', httpService.listAPI.bind(httpService));
     router.get('/brands/:id', httpService.getDetailAPI.bind(httpService));
-    router.patch('/brands/:id', httpService.updateAPI.bind(httpService));
-    router.delete('/brands/:id', httpService.deleteAPI.bind(httpService));
+    router.patch('/brands/:id', mdlFactory.auth, adminChecker, httpService.updateAPI.bind(httpService));
+    router.delete('/brands/:id',  mdlFactory.auth, adminChecker, httpService.deleteAPI.bind(httpService));
 
     router.post('/rpc/brands',(req, res) => {
        const { ids } = req.body;
         //get all brands by ids
-
-
+        
        res.json({
         data: []
        })

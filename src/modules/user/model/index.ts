@@ -7,17 +7,15 @@ import {
     ErrLastNameAtLeast2Characters,
     ErrPasswordAtLeast6Chars,
     ErrRoleInvalid,
+    ErrStatusInvalid,
 } from './errorr';
+
+import { UserRole } from '@share/interface';
 
 export enum  Gender {
     MALE  = 'male',
     FEMALE = 'female',
     UNKNOWN = 'unknown'
-}
-
-export enum Role {
-    ADMIN = 'admin',
-    USER = 'user'
 }
 
 export enum Status {
@@ -31,17 +29,17 @@ export enum Status {
 export const userSchema = z.object({
     id: z.string().uuid(),
     avatar: z.string().nullable().optional(),
-    firstName: z.string().min(2, ErrFirstNameAtLeast2Characters),
-    lastName: z.string().min(2, ErrLastNameAtLeast2Characters),
-    email: z.string().email(ErrEmailInvalid),
-    password: z.string().min(6, ErrPasswordAtLeast6Chars),
+    firstName: z.string().min(2, ErrFirstNameAtLeast2Characters.message),
+    lastName: z.string().min(2, ErrLastNameAtLeast2Characters.message),
+    email: z.string().email(ErrEmailInvalid.message),
+    password: z.string().min(6, ErrPasswordAtLeast6Chars.message),
     salt: z.string().min(8),
     phone: z.string().nullable().optional(),
     address: z.string().nullable().optional(),
     birthday: z.date({invalid_type_error: ErrBirthdayInvalid.message}).nullable().optional(),
     gender: z.nativeEnum(Gender, ErrGenderInvalid),
-    role: z.nativeEnum(Role, ErrRoleInvalid),
-    status: z.nativeEnum(Status).optional(),
+    role: z.nativeEnum(UserRole, ErrRoleInvalid),
+    status: z.nativeEnum(Status, ErrStatusInvalid).optional(),
     createdAt: z.date().optional(),
     updatedAt: z.date().optional()
 });
@@ -74,7 +72,7 @@ export const userUpdateDTOSchema = z.object({
     address: z.string().nullable().optional(),
     birthday: z.date({invalid_type_error: ErrBirthdayInvalid.message}).nullable().optional(),
     gender: z.nativeEnum(Gender, ErrGenderInvalid).optional(),
-    role: z.nativeEnum(Role, ErrRoleInvalid).optional(),
+    role: z.nativeEnum(UserRole, ErrRoleInvalid).optional(),
     status: z.nativeEnum(Status).optional(),
 });
 
@@ -87,7 +85,7 @@ export const userCondDTOSchema = z.object({
     phone: z.string().nullable().optional(),
     address: z.string().nullable().optional(),
     gender: z.nativeEnum(Gender, ErrGenderInvalid).optional(),
-    role: z.nativeEnum(Role, ErrRoleInvalid).optional(),
+    role: z.nativeEnum(UserRole, ErrRoleInvalid).optional(),
     status: z.nativeEnum(Status).optional()
 });
 

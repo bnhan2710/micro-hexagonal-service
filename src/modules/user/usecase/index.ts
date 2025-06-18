@@ -2,24 +2,37 @@ import { ErrDataNotFound } from "@share/model/base-error";
 import { PagingDTO } from "@share/model/paging";
 import { v7 } from "uuid";
 import { IUserUsecase } from "../interface";
-import { Gender,Role, Status, User, UserCondDTO, UserLoginDTO,UserLoginDTOSchema,UserRegistrationDTO, UserRegistrationDTOSchema, UserUpdateDTO, userCondDTOSchema, userUpdateDTOSchema } from '../model'
+import { Gender, Status, User, UserCondDTO, UserLoginDTO,UserLoginDTOSchema,UserRegistrationDTO, UserRegistrationDTOSchema, UserUpdateDTO, userCondDTOSchema, userUpdateDTOSchema } from '../model'
 import { IRepository, TokenPayload, UserRole, UserToken } from "@share/interface";
-import { ErrEmailExisted, ErrInvlidCredential, UserIsInactive } from "../model/errorr";
+import { ErrEmailExisted, ErrInvalidToken, ErrInvlidCredential, UserIsInactive } from "../model/errorr";
 import bcrypt from "bcrypt";
 import { generateRandomString } from "@share/util";
 import { jwtProvider } from "@share/component/jwt";
 import { config } from "@share/component/config";
+import { AppError } from "@share/app-error";
 
 export class UserUseCase implements IUserUsecase{
     constructor(private readonly repository: IRepository<User, UserCondDTO,UserUpdateDTO>){}
 
     async verifyToken(token: string): Promise<TokenPayload> {
-        try {
             const payload = await jwtProvider.verifyToken(token);
-            return payload;
-        } catch (error) {
-            throw new Error('Invalid token');
-        }
+           
+            if(!payload){
+                throw ErrInvalidToken;
+            }
+
+            const user = await this.repository.get(payload.sub);
+            if(!user){
+                throw ErrDataNotFound;
+            }
+            if(user.status !== Status.ACTIVE){
+                throw UserIsInactive;
+            }
+            return {
+                sub: user.id,
+                role: user.role as UserRole
+            };
+
     }
 
     async profile(userId: string): Promise<Partial<User>> {
@@ -38,22 +51,22 @@ export class UserUseCase implements IUserUsecase{
          // 1. Check if email exists
         const user = await this.repository.findByCond({email: dto.email});
         if(!user){
-            throw ErrInvlidCredential;
+            throw AppError.from(ErrInvlidCredential,400).withLog(`User with email ${dto.email} not found`);
         }
 
         // 2. Check password
         const isMatch = await bcrypt.compare(`${dto.password}.${user.salt}`,user.password);
         if(!isMatch){
-            throw ErrInvlidCredential;
+            throw AppError.from(ErrInvlidCredential,400).withLog(`Password for user with email ${dto.email} is incorrect`);
         }
 
         // 3. Check status
         if(user.status !== Status.ACTIVE){
-            throw UserIsInactive
+            throw AppError.from(UserIsInactive)
         }
 
         // 4. Generate token
-        const role = user.role === Role.ADMIN ? UserRole.ADMIN : UserRole.USER;
+        const role = user.role === UserRole.ADMIN ? UserRole.ADMIN : UserRole.USER;
         const accessToken = await jwtProvider.generateToken({sub: user.id, role: role});
         const refreshToken = await jwtProvider.generateToken({sub: user.id, role: role}, config.refreshToken.expiresIn);   
         return {
@@ -84,7 +97,7 @@ export class UserUseCase implements IUserUsecase{
             status: Status.ACTIVE,
             gender: Gender.UNKNOWN,
             salt,
-            role: Role.USER,
+            role: UserRole.USER,
             createdAt: new Date(),
             updatedAt: new Date(),
         }
